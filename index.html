@@ -2,7 +2,9 @@
 <html>
 <head>
 <title>Ultimate Math Challenge</title>
+
 <style>
+
 body{
 font-family:Arial;
 background:#111;
@@ -41,6 +43,7 @@ height:100%;
 width:0%;
 background:lime;
 }
+
 </style>
 </head>
 
@@ -51,6 +54,7 @@ background:lime;
 <div>
 <button onclick="startEndless()">Endless Mode</button>
 <button onclick="startQuiz()">Quiz Mode</button>
+
 <label>
 <input type="checkbox" id="hardcore"> Hardcore Mode
 </label>
@@ -97,7 +101,7 @@ startGame()
 
 function startGame(){
 
-hardcore=document.getElementById("hardcore").checked
+hardcore = document.querySelector("#hardcore").checked === true
 
 q=1
 correct=0
@@ -107,6 +111,7 @@ document.getElementById("game").style.display="block"
 document.getElementById("mode").innerText=mode.toUpperCase()
 
 generateQuestion()
+updateInfo()
 
 }
 
@@ -114,8 +119,6 @@ function generateQuestion(){
 
 let question=""
 let answer=0
-
-// Difficulty scaling
 
 if(q<5){
 
@@ -230,18 +233,44 @@ answers[q]=answer
 
 document.getElementById("question").innerText=`Q${q}: ${question}`
 
+document.getElementById("answer").focus()
+
 updateProgress()
 
 }
 
 function submitAnswer(){
 
-let user=document.getElementById("answer").value
+let user=document.getElementById("answer").value.trim()
+let correctAnswer=answers[q]
 
-if(user==answers[q]){
+// numeric tolerance for decimals
+if(!isNaN(user) && !isNaN(correctAnswer)){
+
+if(Math.abs(parseFloat(user)-parseFloat(correctAnswer))<0.01){
 
 correct++
+q++
 
+document.getElementById("answer").value=""
+
+if(mode=="quiz" && q>500){
+finishQuiz()
+return
+}
+
+generateQuestion()
+updateInfo()
+return
+
+}
+
+}
+
+// exact match for text answers
+if(user==correctAnswer){
+
+correct++
 q++
 
 document.getElementById("answer").value=""
@@ -253,7 +282,9 @@ return
 
 generateQuestion()
 
-}else{
+}
+
+else{
 
 if(hardcore){
 
@@ -285,7 +316,9 @@ if(mode=="endless"){
 
 alert(`You reached question ${q}\nCorrect: ${correct}`)
 
-}else{
+}
+
+else{
 
 finishQuiz()
 
@@ -322,6 +355,18 @@ document.getElementById("bar").style.width=percent+"%"
 function rand(min,max){
 return Math.floor(Math.random()*(max-min+1))+min
 }
+
+// ENTER to submit
+
+document.getElementById("answer").addEventListener("keydown",function(e){
+
+if(e.key==="Enter"){
+submitAnswer()
+}
+
+})
+
+// arrow navigation (disabled in hardcore)
 
 document.addEventListener("keydown",function(e){
 

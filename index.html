@@ -4,7 +4,6 @@
 <title>Ultimate Math Challenge</title>
 
 <style>
-
 body{
 font-family:Arial;
 background:#111;
@@ -25,7 +24,7 @@ margin:10px;
 input{
 font-size:20px;
 padding:5px;
-width:150px;
+width:200px;
 text-align:center;
 }
 
@@ -43,7 +42,6 @@ height:100%;
 width:0%;
 background:lime;
 }
-
 </style>
 </head>
 
@@ -101,7 +99,7 @@ startGame()
 
 function startGame(){
 
-hardcore = document.getElementById("hardcore").checked
+hardcore=document.getElementById("hardcore").checked
 
 q=1
 correct=0
@@ -119,6 +117,8 @@ function generateQuestion(){
 
 let question=""
 let answer=0
+
+// basic math
 
 if(q<5){
 
@@ -150,10 +150,12 @@ answer=a*b
 
 }
 
+// algebra
+
 else if(q<25){
 
 let a=rand(1,10)
-let b=rand(1,10)
+let b=rand(1,20)
 
 question=`Solve for x: x + ${a} = ${b}`
 answer=b-a
@@ -163,21 +165,39 @@ answer=b-a
 else if(q<35){
 
 let a=rand(1,10)
-let b=rand(1,10)
+let b=rand(1,20)
 
 question=`Solve: ${a}x = ${b}`
 answer=b/a
 
 }
 
+// calculus mix
+
 else if(q<45){
 
-let a=rand(1,10)
+let type=rand(1,2)
+
+if(type===1){
+
+let a=rand(2,10)
 
 question=`Derivative of x^${a}`
 answer=`${a}x^${a-1}`
 
+}else{
+
+let m=rand(1,10)
+let x=rand(1,10)
+
+question=`Slope of y=${m}x at x=${x}`
+answer=m
+
 }
+
+}
+
+// integrals
 
 else if(q<100){
 
@@ -188,24 +208,45 @@ answer=`${a/2}x^2 + C`
 
 }
 
+// quantum
+
 else if(q<200){
 
-question="If a quantum state collapses with probability amplitude 1/√2, what is probability?"
-answer=0.5
+let denom=[2,3,4,5][rand(0,3)]
+
+question=`If amplitude = 1/√${denom}, what is probability?`
+answer=(1/denom)
 
 }
+
+// eigenvalues
 
 else if(q<500){
 
-question="Solve eigenvalue of [[2,1],[1,2]] largest?"
-answer=3
+let a=rand(1,5)
+let b=rand(1,5)
+
+let matrix=`[[${a},${b}],[${b},${a}]]`
+
+let eigen=a+b
+
+question=`Largest eigenvalue of ${matrix}`
+answer=eigen
 
 }
 
+// insane arithmetic
+
 else{
 
-question="Prove Riemann Hypothesis"
-answer="impossible"
+let base=(Math.random()*2000).toFixed(4)
+let power=(Math.random()*100).toFixed(2)
+
+question=`${base}^${power}`
+
+answer=Math.pow(base,power)
+
+answer=Number(answer).toExponential(3)
 
 }
 
@@ -226,12 +267,13 @@ let user=document.getElementById("answer").value.trim()
 let correctAnswer=answers[q]
 
 // numeric comparison
+
 if(!isNaN(user) && !isNaN(correctAnswer)){
 
 let u=parseFloat(user)
 let a=parseFloat(correctAnswer)
 
-if(Math.abs(u-a) < 0.01){
+if(Math.abs(u-a)/Math.abs(a) < 0.05){
 
 correct++
 q++
@@ -244,7 +286,8 @@ return
 }
 
 // text comparison
-if(user.toLowerCase() === String(correctAnswer).toLowerCase()){
+
+if(user.toLowerCase()===String(correctAnswer).toLowerCase()){
 
 correct++
 q++
@@ -281,15 +324,11 @@ updateInfo()
 function giveUp(){
 
 if(mode==="endless"){
-
 alert(`You reached question ${q}\nCorrect: ${correct}`)
-
 }
 
 else{
-
 finishQuiz()
-
 }
 
 }
@@ -312,10 +351,8 @@ document.getElementById("info").innerText=
 function updateProgress(){
 
 if(mode==="quiz"){
-
 let percent=(q/500)*100
 document.getElementById("bar").style.width=percent+"%"
-
 }
 
 }
@@ -324,13 +361,15 @@ function rand(min,max){
 return Math.floor(Math.random()*(max-min+1))+min
 }
 
-document.getElementById("answer").addEventListener("keydown",function(e){
+// enter submit
 
+document.getElementById("answer").addEventListener("keydown",function(e){
 if(e.key==="Enter"){
 submitAnswer()
 }
-
 })
+
+// arrow navigation
 
 document.addEventListener("keydown",function(e){
 

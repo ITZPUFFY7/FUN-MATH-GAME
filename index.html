@@ -1,3 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ultimate Math Challenge</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+#game{
+margin-top:50px;
+}
+
+button{
+padding:10px 20px;
+font-size:18px;
+margin:10px;
+}
+
+input{
+font-size:20px;
+padding:5px;
+width:150px;
+text-align:center;
+}
+
+#progress{
+width:400px;
+height:20px;
+background:#333;
+margin:auto;
+border-radius:10px;
+overflow:hidden;
+}
+
+#bar{
+height:100%;
+width:0%;
+background:lime;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Ultimate Math Challenge</h1>
+
+<div>
+<button onclick="startEndless()">Endless Mode</button>
+<button onclick="startQuiz()">Quiz Mode</button>
+
+<label>
+<input type="checkbox" id="hardcore"> Hardcore Mode
+</label>
+</div>
+
+<div id="game" style="display:none;">
+
+<h2 id="mode"></h2>
+
+<div id="progress">
+<div id="bar"></div>
+</div>
+
+<h3 id="question"></h3>
+
+<input id="answer" type="text">
+
+<br>
+
+<button onclick="submitAnswer()">Submit</button>
+<button onclick="giveUp()">Give Up</button>
+
+<p id="info"></p>
+
+</div>
+
 <script>
 
 let mode=""
@@ -67,30 +150,7 @@ answer=a*b
 
 }
 
-else if(q<20){
-
-let a=rand(1,10)
-let b=rand(1,10)
-
-question=`${a}/${b} (decimal)`
-answer=a/b
-
-}
-
 else if(q<25){
-
-let a=rand(1,10)
-let b=rand(1,10)
-
-let n1=parseFloat(`${a}.${b}`)
-let n2=parseFloat(`${b}.${a}`)
-
-question=`${n1} + ${n2}`
-answer=n1+n2
-
-}
-
-else if(q<35){
 
 let a=rand(1,10)
 let b=rand(1,10)
@@ -100,7 +160,7 @@ answer=b-a
 
 }
 
-else if(q<45){
+else if(q<35){
 
 let a=rand(1,10)
 let b=rand(1,10)
@@ -110,7 +170,7 @@ answer=b/a
 
 }
 
-else if(q<50){
+else if(q<45){
 
 let a=rand(1,10)
 
@@ -264,8 +324,6 @@ function rand(min,max){
 return Math.floor(Math.random()*(max-min+1))+min
 }
 
-// ENTER submits answer
-
 document.getElementById("answer").addEventListener("keydown",function(e){
 
 if(e.key==="Enter"){
@@ -273,8 +331,6 @@ submitAnswer()
 }
 
 })
-
-// arrow navigation
 
 document.addEventListener("keydown",function(e){
 
@@ -293,3 +349,6 @@ generateQuestion()
 })
 
 </script>
+
+</body>
+</html>

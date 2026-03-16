@@ -1,86 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Ultimate Math Challenge</title>
-
-<style>
-
-body{
-font-family:Arial;
-background:#111;
-color:white;
-text-align:center;
-}
-
-#game{
-margin-top:50px;
-}
-
-button{
-padding:10px 20px;
-font-size:18px;
-margin:10px;
-}
-
-input{
-font-size:20px;
-padding:5px;
-width:150px;
-text-align:center;
-}
-
-#progress{
-width:400px;
-height:20px;
-background:#333;
-margin:auto;
-border-radius:10px;
-overflow:hidden;
-}
-
-#bar{
-height:100%;
-width:0%;
-background:lime;
-}
-
-</style>
-</head>
-
-<body>
-
-<h1>Ultimate Math Challenge</h1>
-
-<div>
-<button onclick="startEndless()">Endless Mode</button>
-<button onclick="startQuiz()">Quiz Mode</button>
-
-<label>
-<input type="checkbox" id="hardcore"> Hardcore Mode
-</label>
-</div>
-
-<div id="game" style="display:none;">
-
-<h2 id="mode"></h2>
-
-<div id="progress">
-<div id="bar"></div>
-</div>
-
-<h3 id="question"></h3>
-
-<input id="answer" type="text">
-
-<br>
-
-<button onclick="submitAnswer()">Submit</button>
-<button onclick="giveUp()">Give Up</button>
-
-<p id="info"></p>
-
-</div>
-
 <script>
 
 let mode=""
@@ -101,7 +18,7 @@ startGame()
 
 function startGame(){
 
-hardcore = document.querySelector("#hardcore").checked === true
+hardcore = document.getElementById("hardcore").checked
 
 q=1
 correct=0
@@ -156,7 +73,7 @@ let a=rand(1,10)
 let b=rand(1,10)
 
 question=`${a}/${b} (decimal)`
-answer=(a/b).toFixed(2)
+answer=a/b
 
 }
 
@@ -165,8 +82,11 @@ else if(q<25){
 let a=rand(1,10)
 let b=rand(1,10)
 
-question=`${a}.${b} + ${b}.${a}`
-answer=(parseFloat(`${a}.${b}`)+parseFloat(`${b}.${a}`)).toFixed(2)
+let n1=parseFloat(`${a}.${b}`)
+let n2=parseFloat(`${b}.${a}`)
+
+question=`${n1} + ${n2}`
+answer=n1+n2
 
 }
 
@@ -211,14 +131,14 @@ answer=`${a/2}x^2 + C`
 else if(q<200){
 
 question="If a quantum state collapses with probability amplitude 1/√2, what is probability?"
-answer="0.5"
+answer=0.5
 
 }
 
 else if(q<500){
 
 question="Solve eigenvalue of [[2,1],[1,2]] largest?"
-answer="3"
+answer=3
 
 }
 
@@ -233,6 +153,7 @@ answers[q]=answer
 
 document.getElementById("question").innerText=`Q${q}: ${question}`
 
+document.getElementById("answer").value=""
 document.getElementById("answer").focus()
 
 updateProgress()
@@ -244,21 +165,16 @@ function submitAnswer(){
 let user=document.getElementById("answer").value.trim()
 let correctAnswer=answers[q]
 
-// numeric tolerance for decimals
+// numeric comparison
 if(!isNaN(user) && !isNaN(correctAnswer)){
 
-if(Math.abs(parseFloat(user)-parseFloat(correctAnswer))<0.01){
+let u=parseFloat(user)
+let a=parseFloat(correctAnswer)
+
+if(Math.abs(u-a) < 0.01){
 
 correct++
 q++
-
-document.getElementById("answer").value=""
-
-if(mode=="quiz" && q>500){
-finishQuiz()
-return
-}
-
 generateQuestion()
 updateInfo()
 return
@@ -267,19 +183,11 @@ return
 
 }
 
-// exact match for text answers
-if(user==correctAnswer){
+// text comparison
+if(user.toLowerCase() === String(correctAnswer).toLowerCase()){
 
 correct++
 q++
-
-document.getElementById("answer").value=""
-
-if(mode=="quiz" && q>500){
-finishQuiz()
-return
-}
-
 generateQuestion()
 
 }
@@ -288,13 +196,13 @@ else{
 
 if(hardcore){
 
-if(mode=="endless"){
+if(mode==="endless"){
 alert("Hardcore failure. Game over.")
 giveUp()
 return
 }
 
-if(mode=="quiz"){
+if(mode==="quiz"){
 correct=0
 alert("Hardcore wrong! Score reset!")
 }
@@ -312,7 +220,7 @@ updateInfo()
 
 function giveUp(){
 
-if(mode=="endless"){
+if(mode==="endless"){
 
 alert(`You reached question ${q}\nCorrect: ${correct}`)
 
@@ -343,7 +251,7 @@ document.getElementById("info").innerText=
 
 function updateProgress(){
 
-if(mode=="quiz"){
+if(mode==="quiz"){
 
 let percent=(q/500)*100
 document.getElementById("bar").style.width=percent+"%"
@@ -356,7 +264,7 @@ function rand(min,max){
 return Math.floor(Math.random()*(max-min+1))+min
 }
 
-// ENTER to submit
+// ENTER submits answer
 
 document.getElementById("answer").addEventListener("keydown",function(e){
 
@@ -366,7 +274,7 @@ submitAnswer()
 
 })
 
-// arrow navigation (disabled in hardcore)
+// arrow navigation
 
 document.addEventListener("keydown",function(e){
 
@@ -385,6 +293,3 @@ generateQuestion()
 })
 
 </script>
-
-</body>
-</html>
